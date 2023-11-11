@@ -19,10 +19,12 @@ int main(void)
 
 
 	while(1) {
-		swap_buffers(MAIN);
-			Render_screen(MAIN,player,25);
+		printf("allo");
+		FillScreen(MAIN,RGB15(31,31,0));
+		//swap_buffers(MAIN);
+		//Render_screen(MAIN,player,25);
 			//Render_map(MAIN,player);
-			update_player();
+		//update_player();
 		swiWaitForVBlank();
 	}
 

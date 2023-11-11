@@ -4,7 +4,7 @@
 #include <nds.h>
 #include "P_Util.h"
 
-#define FB0
+#define ROTOSCALE
 
 enum BUFFER_TYPE
 {

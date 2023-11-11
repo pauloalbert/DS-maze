@@ -26,11 +26,27 @@ void P_Graphics_setup_main()
 #endif
 
 #ifdef ROTOSCALE
-	//Graphics (Part 2)
-#endif
+	//BG0 will be a tilemap for the sky and floor, using VRAM B
+	//BG2 will be a a rotoscale for the walls, using VRAM A
+	REG_DISPCNT = MODE_4_2D | DISPLAY_BG2_ACTIVE ;//| DISPLAY_BG0_ACTIVE;
 
-#ifdef TILES
-	//Graphics (Part 3)
+	//Set the coresponding VRAM bank
+	VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;
+	//VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_BG;
+
+	BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
+	//BGCTRL[0] = BG_MAP_BASE(8) | BG_32x32;
+
+	BG_PALETTE[1] = RGB15(15,15,31);
+	BG_PALETTE[2] = RGB15(15,31,15);
+	BG_PALETTE[3] = RGB15(31,15,15);
+
+	P_Graphics_assignBuffer(MAIN, (u16*)BG_GFX,256,192);
+	REG_BG2PA = 256;
+	REG_BG2PC = 0;
+	REG_BG2PB = 0;
+	REG_BG2PD = 256;
+
 #endif
 }
 
@@ -116,6 +132,9 @@ void DrawRectangle(enum BUFFER_TYPE bT, int top, int bottom, int left, int right
 }
 
 void swap_buffers(enum BUFFER_TYPE bT){
+
+#ifdef FB0
+
 	switch(bT){
 	case MAIN:
 		if(using_vram_a) P_Graphics_assignBuffer(MAIN,(u16*)VRAM_B,256,192);
@@ -129,4 +148,15 @@ void swap_buffers(enum BUFFER_TYPE bT){
 	case SUB:
 		break;
 	}
+#endif
+
+
+#ifdef ROTOSCALE
+	switch(bT){
+	case MAIN:
+		break;
+	case SUB:
+		break;
+	}
+#endif
 }
