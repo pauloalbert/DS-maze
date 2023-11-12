@@ -7,8 +7,8 @@ int P_Graphics_mainH;
 int P_Graphics_subW;
 int P_Graphics_subH;
 
-bool using_vram_a = true;
-bool using_vram_c = true;
+bool main_graphics_frame = true;
+bool sub_graphics_frame = true;
 void P_Graphics_setup_main()
 {
 #ifdef FB0
@@ -74,7 +74,13 @@ void P_Graphics_assignBuffer(enum BUFFER_TYPE bT, u16* buffer, int w, int h)
 void FillScreen(enum BUFFER_TYPE t, u16 color)
 {
 	int i;
+#ifdef BF0
+	u16* P_Buffer = get_buffer_pointer(t);
+#endif
+#ifdef ROTOSCALE
 	u8* P_Buffer = (u8*)get_buffer_pointer(t);
+#endif
+
 	int P_BufferH = get_buffer_height(t);
 	int P_BufferW = get_buffer_width(t);
 		//Fill the whole screen (256*192) with the given color
@@ -87,7 +93,12 @@ void FillScreen(enum BUFFER_TYPE t, u16 color)
 
 void FillRectangle(enum BUFFER_TYPE bT, int top, int bottom, int left, int right, u16 color)
 {
+#ifdef BF0
 	u16* P_Buffer = get_buffer_pointer(bT);
+#endif
+#ifdef ROTOSCALE
+	u8* P_Buffer = (u8*)get_buffer_pointer(bT);
+#endif
 	int P_BufferH = get_buffer_height(bT);
 	int P_BufferW = get_buffer_width(bT);
 
@@ -137,13 +148,13 @@ void swap_buffers(enum BUFFER_TYPE bT){
 
 	switch(bT){
 	case MAIN:
-		if(using_vram_a) P_Graphics_assignBuffer(MAIN,(u16*)VRAM_B,256,192);
+		if(main_graphics_frame) P_Graphics_assignBuffer(MAIN,(u16*)VRAM_B,256,192);
 		else P_Graphics_assignBuffer(MAIN,(u16*)VRAM_A,256,192);
 
 		//Set the coresponding VRAM bank
-		if(using_vram_a) {REG_DISPCNT = MODE_FB0;}
+		if(main_graphics_frame) {REG_DISPCNT = MODE_FB0;}
 		else {REG_DISPCNT = MODE_FB1;}
-		using_vram_a = !using_vram_a;
+		main_graphics_frame = !main_graphics_frame;
 		break;
 	case SUB:
 		break;
@@ -154,6 +165,11 @@ void swap_buffers(enum BUFFER_TYPE bT){
 #ifdef ROTOSCALE
 	switch(bT){
 	case MAIN:
+		if(main_graphics_frame) P_Graphics_assignBuffer(MAIN,BG_GFX,256,192);
+		else P_Graphics_assignBuffer(MAIN,BG_GFX,256,192);
+
+		if(main_graphics_frame) BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
+		else BGCTRL[2] = BG_BMP_BASE(4);
 		break;
 	case SUB:
 		break;

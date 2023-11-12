@@ -109,9 +109,9 @@ void Render_screen(enum BUFFER_TYPE bT, struct Player player, int columns){
 		u16 wall_color = color_from_wall(x_wall_distance < y_wall_distance ? x_wall_type : y_wall_type, x_wall_distance > y_wall_distance);
 		//wall_color = RGB15((wall_color & 0x1f ) /(color_falloff+1),((wall_color & 0x1f<<5 )>>5/(color_falloff+1)), (((wall_color>>10)&0x1f)/(color_falloff+1)));
 		float half_length_wall = 150/(1+(distance*cos(MAZE_FOV*(-0.5+i/(float)columns)))/MAZE_BLOCK_SIZE);
-		FillRectangle(MAIN, 0, clamp(96-(int)half_length_wall,0,192), (int)(i*(256/(float)columns)),(int)((i+1)*(256/(float)columns))-1, RGB15(20,25,31));
-		FillRectangle(MAIN, clamp(96+(int)half_length_wall,0,192), 192, (int)(i*(256/(float)columns)),(int)((i+1)*(256/(float)columns))-1, RGB15(20,31,20));
-		FillRectangle(bT, clamp(96-(int)half_length_wall,0,192), clamp(96+(int)half_length_wall,0,192), (int)(i*(256/(float)columns)),(int)((i+1)*(256/(float)columns))-1,wall_color);
+		FillRectangle(MAIN, 0, clamp(96-(int)half_length_wall,0,192), (int)(i*(256/(float)columns)),(int)((i+1)*(256/(float)columns))-1, 1);
+		FillRectangle(MAIN, clamp(96+(int)half_length_wall,0,192), 192, (int)(i*(256/(float)columns)),(int)((i+1)*(256/(float)columns))-1, 2);
+		FillRectangle(bT, clamp(96-(int)half_length_wall,0,192), clamp(96+(int)half_length_wall,0,192), (int)(i*(256/(float)columns)),(int)((i+1)*(256/(float)columns))-1,3);
 		//DrawAngledLine(bT,player.x,player.y,angle,x_wall_distance,RGB15(31,0,0));
 		//DrawAngledLine(bT,player.x,player.y,angle+0.05,y_wall_distance,RGB15(0,0,31));
 	}
