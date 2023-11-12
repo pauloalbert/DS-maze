@@ -28,7 +28,7 @@ void P_Graphics_setup_main()
 #ifdef ROTOSCALE
 	//BG0 will be a tilemap for the sky and floor, using VRAM B
 	//BG2 will be a a rotoscale for the walls, using VRAM A
-	REG_DISPCNT = MODE_4_2D | DISPLAY_BG2_ACTIVE ;//| DISPLAY_BG0_ACTIVE;
+	REG_DISPCNT = MODE_5_2D | DISPLAY_BG2_ACTIVE ;//| DISPLAY_BG0_ACTIVE;
 
 	//Set the coresponding VRAM bank
 	VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;
@@ -74,7 +74,7 @@ void P_Graphics_assignBuffer(enum BUFFER_TYPE bT, u16* buffer, int w, int h)
 void FillScreen(enum BUFFER_TYPE t, u16 color)
 {
 	int i;
-	u16* P_Buffer = get_buffer_pointer(t);
+	u8* P_Buffer = (u8*)get_buffer_pointer(t);
 	int P_BufferH = get_buffer_height(t);
 	int P_BufferW = get_buffer_width(t);
 		//Fill the whole screen (256*192) with the given color

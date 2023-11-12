@@ -19,8 +19,8 @@ int main(void)
 
 
 	while(1) {
-		printf("allo");
-		FillScreen(MAIN,RGB15(31,31,0));
+		//printf("allo");
+		FillScreen(MAIN,0x1);
 		//swap_buffers(MAIN);
 		//Render_screen(MAIN,player,25);
 			//Render_map(MAIN,player);
