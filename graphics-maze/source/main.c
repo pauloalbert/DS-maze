@@ -13,7 +13,11 @@ int main(void)
 	consoleDemoInit();
 	Maze_Init();
 	P_Graphics_setup_main();
-
+	swap_buffers(MAIN);
+	int i = 0;
+	for(i = 0; i < 4; i++){
+		printf("for %d:\ngfx: %p\nmap: %p\nprio %d\n\n",i, bgGetGfxPtr(i), bgGetMapPtr(i), bgGetPriority(i));
+	}
 
 
 
