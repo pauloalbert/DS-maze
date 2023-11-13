@@ -141,3 +141,7 @@ void Render_map(enum BUFFER_TYPE bT, Camera player){
 byte getMaze(int x, int y){
 	return maze[coords(x,y,MAZE_WIDTH)];
 }
+
+byte getMazeFromWorld(float px, float py){
+	return getMaze(round_float(px)>>5,round_float(py)>>5);
+}

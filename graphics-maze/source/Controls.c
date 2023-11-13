@@ -23,9 +23,6 @@ void handleInput(Camera* camera, Player* player){
 	if(startHeldKeys != -1 && keys == startHeldKeys)
 		return;
 	startHeldKeys = -1;
-	inline int round(double b){
-		return (int)(b+0.5);
-	}
 
 	if(keys & KEY_L){
 			player->torque = clamp_float(player->torque - TURN_GAIN, -TURN_MAX, -TURN_MIN);
@@ -58,11 +55,11 @@ void handleInput(Camera* camera, Player* player){
 
 	x_vec += player->x_vel;
 	y_vec += player->y_vel;
-	if(!getMaze(round(player->x+x_vec)>>5,round(player->y)>>5))
+	if(!getMazeFromWorld(player->x+x_vec,player->y))
 		player->x += x_vec;
 	else
 		player->x_vel = 0;
-	if(!getMaze(round(player->x)>>5,round(player->y+y_vec)>>5))
+	if(!getMazeFromWorld(player->x,player->y+y_vec))
 			player->y += y_vec;
 		else
 			player->y_vel = 0;
@@ -90,8 +87,8 @@ void handleInput(Camera* camera, Player* player){
 
 	//set camera based on player:
 	camera->angle = player->angle;
-	camera->x = round(player->x-PULLBACK*cos(player->angle));
-	camera->y = round(player->y-PULLBACK*sin(player->angle));
+	camera->x = round_float(player->x-PULLBACK*cos(player->angle));
+	camera->y = round_float(player->y-PULLBACK*sin(player->angle));
 
 
 }

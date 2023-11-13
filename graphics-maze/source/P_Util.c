@@ -23,3 +23,7 @@ inline int sign(int x){
 		return -1;
 	return 0;
 }
+
+inline int round_float(float b){
+	return (int)(b+0.5);
+}

@@ -14,3 +14,5 @@ inline int clamp(int value, int min, int max);
 inline int coords(int x, int y, int w);
 
 inline int sign(int x);
+
+inline int round_float(float b);
