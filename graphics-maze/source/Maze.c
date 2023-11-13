@@ -42,7 +42,7 @@ u16 color_from_wall(int wall_type, bool is_x_wall){
 }
 
 void Maze_Init(){
-	MAZE_FOV = 0.5;
+	MAZE_FOV = 0.9;
 }
 
 float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* wall_type){

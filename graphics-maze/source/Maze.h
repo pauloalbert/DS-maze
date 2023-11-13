@@ -20,8 +20,8 @@ typedef struct{
 	float x;
 	float y;
 	float angle;
-	float acc_x;
-	float acc_y;
+	float x_vel;
+	float y_vel;
 	float torque;
 	byte health;
 } Player;
