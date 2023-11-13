@@ -96,7 +96,7 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* w
 
 }
 
-void Render_screen(enum BUFFER_TYPE bT, struct Player player, int columns){
+void Render_screen(enum BUFFER_TYPE bT, Player player, int columns){
 	//FillRectangle(MAIN, 0,85,0,255, RGB15(20,25,31));
 	//FillRectangle(MAIN, 86,191,0,255, RGB15(20,31,20));
 	int i = 0;
@@ -123,7 +123,7 @@ void Render_screen(enum BUFFER_TYPE bT, struct Player player, int columns){
 }
 
 int map_border = 0;
-void Render_map(enum BUFFER_TYPE bT, struct Player player){
+void Render_map(enum BUFFER_TYPE bT, Player player){
 
 
 	int i = 0;

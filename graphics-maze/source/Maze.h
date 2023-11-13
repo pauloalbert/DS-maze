@@ -10,11 +10,11 @@
 //         south (+y)
 //player lives in 256 by 256 grid, but each block is 16*16
 
-struct Player{
+typedef struct{
 	int x;
 	int y;
 	float angle;
-};
+} Player;
 
 extern int maze[];
 void Maze_Init();
@@ -22,6 +22,6 @@ float MAZE_FOV; //radian
 
 float Maze_get_raycast_distance(int x, int y, float angle, bool x_wall, int* wall_type);
 
-void Render_screen(enum BUFFER_TYPE bT, struct Player player, int columns);
+void Render_screen(enum BUFFER_TYPE bT, Player player, int columns);
 
-void Render_map(enum BUFFER_TYPE bT, struct Player player);
+void Render_map(enum BUFFER_TYPE bT, Player player);

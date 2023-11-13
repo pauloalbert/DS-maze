@@ -4,14 +4,14 @@
 #include "P_Graphics.h"
 #include "P_Graphics_Plus.h"
 #include "Maze.h"
-struct Player player= {60,140,1.5};
-void update_player(){
-	player.angle += 0.1;
-}
+#include "Controls.h"
+Player player= {60,140,1.5};
+
 int main(void)
 {
 	consoleDemoInit();
 	Maze_Init();
+	initInput();
 	P_Graphics_setup_main();
 	int i = 0;
 	for(i = 0; i < 4; i++){
@@ -28,7 +28,7 @@ int main(void)
 		swap_buffers(MAIN);
 		Render_screen(MAIN,player,32);
 			//Render_map(MAIN,player);
-		update_player();
+		handleInput(&player);
 		swiWaitForVBlank();
 	}
 
