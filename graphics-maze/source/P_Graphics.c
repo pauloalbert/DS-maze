@@ -37,9 +37,12 @@ void P_Graphics_setup_main()
 	BGCTRL[2] = BG_BMP_BASE(4) | BG_BMP8_256x256;
 	//BGCTRL[0] = BG_MAP_BASE(8) | BG_32x32;
 
+	//wall 1
 	BG_PALETTE[1] = RGB15(15,15,31);
-	BG_PALETTE[2] = RGB15(15,31,15);
+	BG_PALETTE[2] = RGB15(8,8,21);
+	//wall 2
 	BG_PALETTE[3] = RGB15(31,15,15);
+	BG_PALETTE[4] = RGB15(21,8,8);
 
 	P_Graphics_assignBuffer(MAIN, (u16*)BG_GFX,256,192);
 	REG_BG2PA = 256;
@@ -168,8 +171,8 @@ void swap_buffers(enum BUFFER_TYPE bT){
 		if(main_graphics_frame) P_Graphics_assignBuffer(MAIN,BG_GFX+0x8000,256,192);
 		else P_Graphics_assignBuffer(MAIN,BG_GFX,256,192);
 
-		if(main_graphics_frame) memset(BG_GFX+0x8000,0,256*192);
-		else if(main_graphics_frame) memset(BG_GFX,0,256*192);
+		if(main_graphics_frame) memset(BG_GFX + 0x8000,0,256*192);
+		else memset(BG_GFX,0,256*192);
 
 		if(main_graphics_frame) BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
 		else BGCTRL[2] = BG_BMP_BASE(4) | BG_BMP8_256x256;

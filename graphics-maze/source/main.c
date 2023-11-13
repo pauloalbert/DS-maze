@@ -27,7 +27,7 @@ int main(void)
 		//FillScreen(MAIN,0x1);
 		//FillRectangle(MAIN,30,100,30,100,2);
 		swap_buffers(MAIN);
-		Render_screen(MAIN,player,128);
+		Render_screen(MAIN,player,32);
 			//Render_map(MAIN,player);
 		update_player();
 		swiWaitForVBlank();
