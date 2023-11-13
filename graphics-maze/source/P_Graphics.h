@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <nds.h>
 #include "P_Util.h"
+#include "Constants.h"
 
 #define ROTOSCALE
 

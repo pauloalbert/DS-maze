@@ -26,9 +26,7 @@ typedef struct{
 	byte health;
 } Player;
 
-extern int maze[];
 void Maze_Init();
-float MAZE_FOV; //radian
 
 float Maze_get_raycast_distance(int x, int y, float angle, bool x_wall, int* wall_type);
 

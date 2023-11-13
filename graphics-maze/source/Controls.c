@@ -7,10 +7,6 @@
 #include "Controls.h"
 #include <math.h>
 
-#define TURN_MAX 0.15
-#define TURN_MIN 0.05
-#define TURN_GAIN 0.005
-
 int startHeldKeys = -1;
 
 void initInput(){
@@ -41,38 +37,35 @@ void handleInput(Camera* camera, Player* player){
 		player->angle += player->torque;
 	}
 
-	int speed = 3.5;
-	int strafe_speed = 2.2;
-
 	float x_vec;
 	float y_vec;
 	if(keys & KEY_LEFT){
-		x_vec += strafe_speed * sin(camera->angle);
-		y_vec -= strafe_speed * cos(camera->angle);
+		x_vec += SPEED_STRAFE * sin(player->angle);
+		y_vec -= SPEED_STRAFE * cos(player->angle);
 	}
 	if(keys & KEY_RIGHT){
-		x_vec -= strafe_speed * sin(camera->angle);
-		y_vec += strafe_speed * cos(camera->angle);
+		x_vec -= SPEED_STRAFE * sin(player->angle);
+		y_vec += SPEED_STRAFE * cos(player->angle);
 	}
 	if(keys & KEY_UP){
-		x_vec += speed * cos(camera->angle);
-		y_vec += speed * sin(camera->angle);
+		x_vec += SPEED_FORWARD * cos(player->angle);
+		y_vec += SPEED_FORWARD * sin(player->angle);
 		}
 	if(keys & KEY_DOWN){
-		x_vec -= speed * cos(camera->angle);
-		y_vec -= speed * sin(camera->angle);
+		x_vec -= SPEED_FORWARD * cos(player->angle);
+		y_vec -= SPEED_FORWARD * sin(player->angle);
 		}
 
 	x_vec += player->x_vel;
 	y_vec += player->y_vel;
-	if(!getMaze(round(player->x+x_vec)>>5,round(player->y+y_vec)>>5)){
+	if(!getMaze(round(player->x+x_vec)>>5,round(player->y)>>5))
 		player->x += x_vec;
-		player->y += y_vec;
-	}
-	else{
+	else
 		player->x_vel = 0;
-		player->y_vel = 0;
-	}
+	if(!getMaze(round(player->x)>>5,round(player->y+y_vec)>>5))
+			player->y += y_vec;
+		else
+			player->y_vel = 0;
 
 	x_vec -= player->x_vel;
 	y_vec -= player->y_vel;
@@ -85,16 +78,20 @@ void handleInput(Camera* camera, Player* player){
 	if(y_vec == 0)
 		player->y_vel /= 1.5;
 
-	if(keys & KEY_A){
-		MAZE_FOV = 1.4;
-	}
-	else{
-		MAZE_FOV = 0.9;
-	}
+	if(keys & KEY_A)
+		MAZE_FOV = (MAZE_FOV + MAZE_FOV_MAX) / 2;
+	else
+		MAZE_FOV = MAZE_FOV_MIN;
+
+	if(keys & KEY_B)
+			PULLBACK = (2* PULLBACK + PULLBACK_MAX) / 3;
+		else
+			PULLBACK = (PULLBACK + 2* PULLBACK_MIN) / 3;
+
 	//set camera based on player:
 	camera->angle = player->angle;
-	camera->x = round(player->x);
-	camera->y = round(player->y);
+	camera->x = round(player->x-PULLBACK*cos(player->angle));
+	camera->y = round(player->y-PULLBACK*sin(player->angle));
 
 
 }

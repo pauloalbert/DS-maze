@@ -7,12 +7,9 @@
 #include "Maze.h"
 #include "P_Graphics.h"
 #include "P_Graphics_Plus.h"
+#include "Constants.h"
 #include <math.h>
-const int MAZE_BLOCK_BITS = 5;
-const int MAZE_BLOCK_SIZE = 32;//(2<<MAZE_BLOCK_BITS);
-const int MAZE_HEIGHT = 10;
-const int MAZE_WIDTH = 10;
-int maze[] = {1,1,1,1, 1,1,2,1,1,1,
+maze[] = {1,1,1,1, 1,1,2,1,1,1,
 		1,0,0,0, 0,0,0,0,0,1,
 		1,0,0,1, 0,0,0,0,0,1,
 		1,0,0,0, 0,0,0,0,0,1,
@@ -22,7 +19,6 @@ int maze[] = {1,1,1,1, 1,1,2,1,1,1,
 		1,0,0,0, 0,1,0,0,0,1,
 		1,0,0,2, 0,0,0,0,0,1,
 		1,1,2,1, 1,1,1,1,1,1};
-
 u16 color_from_wall(int wall_type, bool is_x_wall){
 #ifdef FB0
 	switch(wall_type){
@@ -42,7 +38,8 @@ u16 color_from_wall(int wall_type, bool is_x_wall){
 }
 
 void Maze_Init(){
-	MAZE_FOV = 0.9;
+	MAZE_FOV = MAZE_FOV_MIN;
+	PULLBACK = PULLBACK_MIN;
 }
 
 float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* wall_type){
