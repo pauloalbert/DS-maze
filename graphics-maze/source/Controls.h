@@ -9,4 +9,4 @@
 #include <nds.h>
 #include "Maze.h"
 void initInput();
-void handleInput(Player* player);
+void handleInput(Camera* camera, Player* player);

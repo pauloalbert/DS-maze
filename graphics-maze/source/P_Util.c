@@ -5,6 +5,9 @@
  *      Author: nds
  */
 
+inline float clamp_float(float value, float min, float max){
+	return value < min ? min : (value > max ? max : value);
+}
 
 inline int clamp(int value, int min, int max){
 	return value < min ? min : (value > max ? max : value);

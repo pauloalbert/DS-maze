@@ -5,8 +5,8 @@
 #include "P_Graphics_Plus.h"
 #include "Maze.h"
 #include "Controls.h"
-Player camera= {60,140,0};
-
+Camera camera= {60,140,0};
+Player player = {60,140,0,0,0,0,10};
 int main(void)
 {
 	consoleDemoInit();
@@ -24,7 +24,7 @@ int main(void)
 		swap_buffers(MAIN);
 		Render_screen(MAIN,camera,32);
 			//Render_map(MAIN,player);
-		handleInput(&camera);
+		handleInput(&camera, &player);
 		swiWaitForVBlank();
 	}
 

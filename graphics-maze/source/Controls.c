@@ -7,6 +7,10 @@
 #include "Controls.h"
 #include <math.h>
 
+#define TURN_MAX 0.09
+#define TURN_MIN 0.04
+#define TURN_GAIN 0.015
+
 int startHeldKeys = -1;
 
 void initInput(){
@@ -17,7 +21,7 @@ void initInput(){
 	printf("init keys: %d\n", startHeldKeys);
 }
 
-void handleInput(Player* player){
+void handleInput(Camera* camera, Player* player){
 	scanKeys();
 	u16 keys = keysHeld();
 	if(startHeldKeys != -1 && keys == startHeldKeys)
@@ -26,32 +30,48 @@ void handleInput(Player* player){
 	int round(double b){
 		return (int)(b+0.5);
 	}
-	printf("%.2f: s%.2f, c%.2f\n",player->angle, sin(player->angle), cos(player->angle));
+	printf("%.2f: s%.2f, c%.2f\n",camera->angle, sin(camera->angle), cos(camera->angle));
 	int speed = 3.5;
 	int strafe_speed = 2.2;
+
+	float x_vec;
+	float y_vec;
 	if(keys & KEY_LEFT){
-			player->x += round(strafe_speed *sin(player->angle));
-			player->y -= round(strafe_speed*cos(player->angle));
-		}
+		x_vec += strafe_speed *sin(camera->angle);
+		y_vec -= strafe_speed*cos(camera->angle);
+	}
 	if(keys & KEY_RIGHT){
-		player->x -= round(strafe_speed*sin(player->angle));
-		player->y += round(strafe_speed * cos(player->angle));
+		x_vec -= strafe_speed*sin(camera->angle);
+		y_vec += strafe_speed * cos(camera->angle);
 	}
 	if(keys & KEY_UP){
-		player->x += round(speed * cos(player->angle));
-		player->y += round(speed * sin(player->angle));
+		x_vec += speed * cos(camera->angle);
+		y_vec += speed * sin(camera->angle);
 		}
 	if(keys & KEY_DOWN){
-		player->x -= round(speed * cos(player->angle));
-		player->y -= round(speed * sin(player->angle));
-		}
-	if(keys & KEY_L){
-			player->angle -= 0.05;
-		}
-	if(keys & KEY_R){
-			player->angle += 0.05;
+		x_vec -= speed * cos(camera->angle);
+		y_vec -= speed * sin(camera->angle);
 		}
 
+	if(true){
+		player->x += x_vec;
+		player->y += y_vec;
+	}
+
+	if(keys & KEY_L){
+			player->torque = clamp_float(player->torque - TURN_GAIN, -TURN_MAX, -TURN_MIN);
+			player->angle += player->torque;
+		}
+	if(keys & KEY_R){
+
+			player->torque = clamp_float(player->torque + TURN_GAIN, TURN_MIN, TURN_MAX);
+			player->angle += player->torque;
+		}
+
+	//set camera based on player:
+	camera->angle = player->angle;
+	camera->x = round(player->x);
+	camera->y = round(player->y);
 
 
 }

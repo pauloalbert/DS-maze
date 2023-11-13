@@ -7,6 +7,8 @@
 #pragma once
 #include <nds.h>
 
+inline float clamp_float(float value, float min, float max);
+
 inline int clamp(int value, int min, int max);
 
 inline int coords(int x, int y, int w);
