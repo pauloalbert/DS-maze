@@ -100,7 +100,7 @@ void P_Graphics_assignBuffer(enum BUFFER_TYPE bT, u16* buffer, int w, int h)
 void FillScreen(enum BUFFER_TYPE t, u16 color)
 {
 	int i;
-#ifdef BF0
+#ifdef FB0
 	u16* P_Buffer = get_buffer_pointer(t);
 #endif
 #ifdef ROTOSCALE
@@ -119,7 +119,7 @@ void FillScreen(enum BUFFER_TYPE t, u16 color)
 
 void FillRectangle(enum BUFFER_TYPE bT, int top, int bottom, int left, int right, u16 color)
 {
-#ifdef BF0
+#ifdef FB0
 	u16* P_Buffer = get_buffer_pointer(bT);
 #endif
 #ifdef ROTOSCALE

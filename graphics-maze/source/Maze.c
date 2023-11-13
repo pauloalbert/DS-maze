@@ -101,7 +101,7 @@ void Render_screen(enum BUFFER_TYPE bT, Player player, int columns){
 	//FillRectangle(MAIN, 86,191,0,255, RGB15(20,31,20));
 	int i = 0;
 	for(i = 0; i < columns; i++){
-		float angle = player.angle - MAZE_FOV*(-0.5 + (i+1)/(float)(columns+1));
+		float angle = player.angle + MAZE_FOV*(-0.5 + (i+1)/(float)(columns+1));
 
 		int x_wall_type = 0;
 		int y_wall_type = 0;

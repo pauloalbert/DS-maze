@@ -16,6 +16,7 @@ typedef struct{
 	float angle;
 } Player;
 
+
 extern int maze[];
 void Maze_Init();
 float MAZE_FOV; //radian
