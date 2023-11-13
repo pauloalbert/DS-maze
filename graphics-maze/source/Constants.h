@@ -17,8 +17,8 @@ float PULLBACK;
 /* MAZE */
 #define MAZE_BLOCK_BITS 5
 #define MAZE_BLOCK_SIZE 32//(2<<MAZE_BLOCK_BITS);
-#define MAZE_HEIGHT 10
-#define MAZE_WIDTH 10
+#define MAZE_HEIGHT 20
+#define MAZE_WIDTH 20
 extern int maze[];
 
 /* MOVEMENT */
