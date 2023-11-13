@@ -6,25 +6,15 @@ int P_Graphics_mainW;
 int P_Graphics_mainH;
 int P_Graphics_subW;
 int P_Graphics_subH;
-u8 A16[64] = {
-			14,14,14,14,14,14,14,14,
-			14,14,14,14,14,14,14,14,
-			14,14,14,14,14,14,14,14,
-			14,14,14,14,14,14,14,14,
-			14,14,14,14,14,14,14,14,
-			14,14,14,14,14,14,14,14,
-			14,14,14,14,14,14,14,14,
-			14,14,14,14,14,14,14,14
-};
-u8 B16[64] = {
-			15,15,15,15,15,15,15,15,
-			15,15,15,15,15,15,15,15,
-			15,15,15,15,15,15,15,15,
-			15,15,15,15,15,15,15,15,
-			15,15,15,15,15,15,15,15,
-			15,15,15,15,15,15,15,15,
-			15,15,15,15,15,15,15,15,
-			15,15,15,15,15,15,15,15
+u8 A16[32] = {
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff,
+		0xff,0xff,0xff,0xff
 };
 bool main_graphics_frame = true;
 bool sub_graphics_frame = true;
@@ -62,9 +52,9 @@ void P_Graphics_setup_main()
 	BG_PALETTE[3] = RGB15(31,15,15);
 	BG_PALETTE[4] = RGB15(21,8,8);
 
-	//floor roof (if needed)
-	BG_PALETTE[14] = RGB15(15,11,15);
-	BG_PALETTE[15] = RGB15(13,23,16);
+	//roof floor (if needed)
+	BG_PALETTE[15] = RGB15(23,23,30);
+	BG_PALETTE[31] = RGB15(15,11,15);
 	//P_Graphics_assignBuffer(MAIN, (u16*)BG_GFX,256,192);
 	REG_BG2PA = 256;
 	REG_BG2PC = 0;
@@ -72,16 +62,15 @@ void P_Graphics_setup_main()
 	REG_BG2PD = 256;
 
 	/*Tilemap*/
-	BGCTRL[0] = BG_MAP_BASE(1) | BG_32x32 | BG_COLOR_256 | BG_TILE_BASE(0) | BG_PRIORITY_1;
+	BGCTRL[0] = BG_MAP_BASE(1) | BG_32x32 | BG_COLOR_16 | BG_TILE_BASE(0) | BG_PRIORITY_1;
 
 
 
-	dmaCopy(B16, &BG_TILE_RAM(0)[0], 64);
-	dmaCopy(A16, &BG_TILE_RAM(0)[32], 64);
+	dmaCopy(A16, &BG_TILE_RAM(0)[0], 32);
 
 	int i;
 	for(i=0;i<32*32;i++){
-		BG_MAP_RAM(1)[i] = 1;
+		BG_MAP_RAM(1)[i] = 0 | (i>=32*12 ? BIT(12) : 0);
 	}
 #endif
 }
