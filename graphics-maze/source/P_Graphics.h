@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <nds.h>
+#include <video.h>
 #include "P_Util.h"
 
 #define ROTOSCALE

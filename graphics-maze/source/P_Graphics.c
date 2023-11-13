@@ -6,7 +6,16 @@ int P_Graphics_mainW;
 int P_Graphics_mainH;
 int P_Graphics_subW;
 int P_Graphics_subH;
-
+u8 A16[64] = {
+			14,14,14,14,14,14,14,14,
+			14,14,14,14,14,14,14,14,
+			14,14,14,14,14,14,14,14,
+			14,14,14,14,14,14,14,14,
+			14,14,14,14,14,14,14,14,
+			14,14,14,14,14,14,14,14,
+			14,14,14,14,14,14,14,14,
+			14,14,14,14,14,14,14,14
+};
 bool main_graphics_frame = true;
 bool sub_graphics_frame = true;
 void P_Graphics_setup_main()
@@ -28,14 +37,13 @@ void P_Graphics_setup_main()
 #ifdef ROTOSCALE
 	//BG0 will be a tilemap for the sky and floor, using VRAM B
 	//BG2 will be a a rotoscale for the walls, using VRAM A
-	REG_DISPCNT = MODE_5_2D | DISPLAY_BG2_ACTIVE ;//| DISPLAY_BG0_ACTIVE;
+	REG_DISPCNT = MODE_5_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG2_ACTIVE;
 
 	//Set the coresponding VRAM bank
 	VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;
 	//VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_BG;
 
-	BGCTRL[2] = BG_BMP_BASE(4) | BG_BMP8_256x256;
-	//BGCTRL[0] = BG_MAP_BASE(8) | BG_32x32;
+	//BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
 
 	//wall 1
 	BG_PALETTE[1] = RGB15(15,15,31);
@@ -44,11 +52,26 @@ void P_Graphics_setup_main()
 	BG_PALETTE[3] = RGB15(31,15,15);
 	BG_PALETTE[4] = RGB15(21,8,8);
 
-	P_Graphics_assignBuffer(MAIN, (u16*)BG_GFX,256,192);
+	//floor roof (if needed)
+	BG_PALETTE[14] = RGB15(15,15,15);
+	BG_PALETTE[15] = RGB15(8,8,8);
+	//P_Graphics_assignBuffer(MAIN, (u16*)BG_GFX,256,192);
 	REG_BG2PA = 256;
 	REG_BG2PC = 0;
 	REG_BG2PB = 0;
 	REG_BG2PD = 256;
+
+	/*Tilemap*/
+	BGCTRL[0] = BG_MAP_BASE(24) | BG_32x32 | BG_COLOR_256 | BG_TILE_BASE(7) | BG_PRIORITY_1;
+
+
+
+	dmaCopy(A16, &BG_TILE_RAM(7)[0], 64);
+
+	int i;
+	for(i=0;i<32*32;i++){
+		BG_MAP_RAM(24)[i] = 0;
+	}
 
 #endif
 }
@@ -168,14 +191,14 @@ void swap_buffers(enum BUFFER_TYPE bT){
 #ifdef ROTOSCALE
 	switch(bT){
 	case MAIN:
-		if(main_graphics_frame) P_Graphics_assignBuffer(MAIN,BG_GFX+0x8000,256,192);
+		if(main_graphics_frame) P_Graphics_assignBuffer(MAIN,BG_GFX+0x6000,256,192);
 		else P_Graphics_assignBuffer(MAIN,BG_GFX,256,192);
 
-		if(main_graphics_frame) memset(BG_GFX + 0x8000,0,256*192);
+		if(main_graphics_frame) memset(BG_GFX + 0x6000,0,256*192);
 		else memset(BG_GFX,0,256*192);
 
 		if(main_graphics_frame) BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
-		else BGCTRL[2] = BG_BMP_BASE(4) | BG_BMP8_256x256;
+		else BGCTRL[2] = BG_BMP_BASE(3) | BG_BMP8_256x256;
 		main_graphics_frame = !main_graphics_frame;
 		break;
 	case SUB:
