@@ -35,3 +35,5 @@ float Maze_get_raycast_distance(int x, int y, float angle, bool x_wall, int* wal
 void Render_screen(enum BUFFER_TYPE bT, Camera player, int columns);
 
 void Render_map(enum BUFFER_TYPE bT, Camera player);
+
+byte getMaze(int x, int y);

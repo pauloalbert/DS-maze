@@ -16,6 +16,16 @@ u8 A16[64] = {
 			14,14,14,14,14,14,14,14,
 			14,14,14,14,14,14,14,14
 };
+u8 B16[64] = {
+			15,15,15,15,15,15,15,15,
+			15,15,15,15,15,15,15,15,
+			15,15,15,15,15,15,15,15,
+			15,15,15,15,15,15,15,15,
+			15,15,15,15,15,15,15,15,
+			15,15,15,15,15,15,15,15,
+			15,15,15,15,15,15,15,15,
+			15,15,15,15,15,15,15,15
+};
 bool main_graphics_frame = true;
 bool sub_graphics_frame = true;
 void P_Graphics_setup_main()
@@ -43,7 +53,7 @@ void P_Graphics_setup_main()
 	VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;
 	//VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_BG;
 
-	//BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
+	BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
 
 	//wall 1
 	BG_PALETTE[1] = RGB15(15,15,31);
@@ -53,8 +63,8 @@ void P_Graphics_setup_main()
 	BG_PALETTE[4] = RGB15(21,8,8);
 
 	//floor roof (if needed)
-	BG_PALETTE[14] = RGB15(15,15,15);
-	BG_PALETTE[15] = RGB15(8,8,8);
+	BG_PALETTE[14] = RGB15(15,11,15);
+	BG_PALETTE[15] = RGB15(13,23,16);
 	//P_Graphics_assignBuffer(MAIN, (u16*)BG_GFX,256,192);
 	REG_BG2PA = 256;
 	REG_BG2PC = 0;
@@ -62,17 +72,17 @@ void P_Graphics_setup_main()
 	REG_BG2PD = 256;
 
 	/*Tilemap*/
-	BGCTRL[0] = BG_MAP_BASE(24) | BG_32x32 | BG_COLOR_256 | BG_TILE_BASE(7) | BG_PRIORITY_1;
+	BGCTRL[0] = BG_MAP_BASE(1) | BG_32x32 | BG_COLOR_256 | BG_TILE_BASE(0) | BG_PRIORITY_1;
 
 
 
-	dmaCopy(A16, &BG_TILE_RAM(7)[0], 64);
+	dmaCopy(B16, &BG_TILE_RAM(0)[0], 64);
+	dmaCopy(A16, &BG_TILE_RAM(0)[32], 64);
 
 	int i;
 	for(i=0;i<32*32;i++){
-		BG_MAP_RAM(24)[i] = 0;
+		BG_MAP_RAM(1)[i] = 1;
 	}
-
 #endif
 }
 
@@ -191,14 +201,14 @@ void swap_buffers(enum BUFFER_TYPE bT){
 #ifdef ROTOSCALE
 	switch(bT){
 	case MAIN:
-		if(main_graphics_frame) P_Graphics_assignBuffer(MAIN,BG_GFX+0x6000,256,192);
-		else P_Graphics_assignBuffer(MAIN,BG_GFX,256,192);
+		if(main_graphics_frame) P_Graphics_assignBuffer(MAIN,BG_GFX+0x8000,256,192);
+		else P_Graphics_assignBuffer(MAIN,BG_GFX+0x2000,256,192);
 
-		if(main_graphics_frame) memset(BG_GFX + 0x6000,0,256*192);
-		else memset(BG_GFX,0,256*192);
+		if(main_graphics_frame) memset(BG_GFX + 0x8000,0,256*192);
+		else memset(BG_GFX+0x2000,0,256*192);
 
-		if(main_graphics_frame) BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
-		else BGCTRL[2] = BG_BMP_BASE(3) | BG_BMP8_256x256;
+		if(main_graphics_frame) BGCTRL[2] = BG_BMP_BASE(1) | BG_BMP8_256x256;
+		else BGCTRL[2] = BG_BMP_BASE(4) | BG_BMP8_256x256;
 		main_graphics_frame = !main_graphics_frame;
 		break;
 	case SUB:

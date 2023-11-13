@@ -30,7 +30,7 @@ void handleInput(Camera* camera, Player* player){
 	int round(double b){
 		return (int)(b+0.5);
 	}
-	printf("%.2f: s%.2f, c%.2f\n",camera->angle, sin(camera->angle), cos(camera->angle));
+
 	int speed = 3.5;
 	int strafe_speed = 2.2;
 
@@ -53,7 +53,8 @@ void handleInput(Camera* camera, Player* player){
 		y_vec -= speed * sin(camera->angle);
 		}
 
-	if(true){
+	//todo: ????
+	if(!getMaze(round(player->x+x_vec)>>5,round(player->y+y_vec)>>5)){
 		player->x += x_vec;
 		player->y += y_vec;
 	}

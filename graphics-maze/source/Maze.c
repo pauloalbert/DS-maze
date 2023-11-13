@@ -140,3 +140,7 @@ void Render_map(enum BUFFER_TYPE bT, Camera player){
 
 	DrawAngledLine(bT,player.x,player.y,player.angle,10,RGB15(31,0,0));
 }
+
+byte getMaze(int x, int y){
+	return maze[coords(x,y,MAZE_WIDTH)];
+}
