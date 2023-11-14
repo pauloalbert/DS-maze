@@ -29,6 +29,12 @@ void _handleInput(Camera* camera, Player* player, u16 keys, u16 keys_pressed){
 		player->y = 140;
 	}
 
+		inline float mod_float(float x, int amount){
+			return fmod(fmod(x, amount) + amount,amount);
+	}
+	player->x = mod_float(player->x, MAZE_WIDTH<<MAZE_BLOCK_BITS);
+
+	player->y = mod_float(player->y, MAZE_HEIGHT<<MAZE_BLOCK_BITS);
 	//
 	if(keys_pressed & KEY_A)
 		tryGoal(player->x,player->y,player->angle);
@@ -71,8 +77,8 @@ void handleInput(Camera* camera, Player* player){
 		y_vec -= SPEED_FORWARD * sin(player->angle);
 		}
 
-	x_vec += player->x_vel;
-	y_vec += player->y_vel;
+	x_vec += player->x_vel * (player->x_vel * x_vec < 0 ? 0.5 : 1);
+	y_vec += player->y_vel * (player->y_vel * y_vec < 0 ? 0.5 : 1);;
 	if(!getMazeFromWorld(player->x+x_vec,player->y))
 		player->x += x_vec;
 	else
