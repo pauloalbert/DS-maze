@@ -43,7 +43,7 @@ void P_Graphics_setup_main()
 	VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;
 	//VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_BG;
 
-	BGCTRL[2] = BG_BMP_BASE(0) | BG_BMP8_256x256;
+	BGCTRL[2] = BG_BMP_BASE(1) | BG_BMP8_256x256;
 
 	//wall 1
 	BG_PALETTE[1] = RGB15(15,15,31);
@@ -63,7 +63,7 @@ void P_Graphics_setup_main()
 
 	/*Tilemap*/
 	BGCTRL[0] = BG_MAP_BASE(1) | BG_32x32 | BG_COLOR_16 | BG_TILE_BASE(0) | BG_PRIORITY_1;
-
+	P_Graphics_assignBuffer(MAIN,BG_GFX,256,192);
 
 
 	dmaCopy(A16, &BG_TILE_RAM(0)[0], 32);
@@ -103,15 +103,15 @@ void FillScreen(enum BUFFER_TYPE t, u16 color)
 	u16* P_Buffer = get_buffer_pointer(t);
 #endif
 #ifdef ROTOSCALE
-	u8* P_Buffer = (u8*)get_buffer_pointer(t);
+	u16* P_Buffer = get_buffer_pointer(t);
 #endif
 
 	int P_BufferH = get_buffer_height(t);
 	int P_BufferW = get_buffer_width(t);
 		//Fill the whole screen (256*192) with the given color
-	for(i = 0; i<P_BufferH*P_BufferW; i++){
+	for(i = 0; i<P_BufferH*P_BufferW/2; i++){
 		//color=color&0b11111 |(color&(0b11111<<5)) | color&(0b11111<<10);
-		P_Buffer[i] = color;
+		P_Buffer[i] = color+(color<<8);
 	}
 
 }
@@ -122,8 +122,9 @@ void FillRectangle(enum BUFFER_TYPE bT, int top, int bottom, int left, int right
 	u16* P_Buffer = get_buffer_pointer(bT);
 #endif
 #ifdef ROTOSCALE
-	u8* P_Buffer = (u8*)get_buffer_pointer(bT);
+	u16* P_Buffer = get_buffer_pointer(bT);
 #endif
+
 	int P_BufferH = get_buffer_height(bT);
 	int P_BufferW = get_buffer_width(bT);
 
@@ -138,9 +139,16 @@ void FillRectangle(enum BUFFER_TYPE bT, int top, int bottom, int left, int right
 	short i, j;
 
 	for(j = top; j <= bottom; j++){
-		for(i = left; i <= right; i++){
-			P_Buffer[coords(i,j,P_BufferW)] = color;
+		i = left;
+		//if i'm on an odd pixel, draw only the second one of the pair.
+		if(i%2 == 1)
+			P_Buffer[coords(i++,j,P_BufferW)/2] = (color<<8);
+
+		for(; i < right; i+=2){
+			P_Buffer[coords(i,j,P_BufferW)/2] = color+(color<<8);
 		}
+		if(i == right)
+			P_Buffer[coords(i,j,P_BufferW)/2] = color;
 	}
 }
 
