@@ -9,23 +9,23 @@ maze[] = {1,1,1,1,1, 1,1,1,1,1, 2,2,2,2,2, 2,2,2,2,2,
 		1,0,0,0,0, 0,0,1,0,0, 0,0,0,0,1, 0,0,0,0,2,
 		1,0,0,1,0, 0,0,0,0,1, 0,0,0,0,1, 0,0,0,0,2,
 		1,0,0,0,0, 0,0,1,1,1, 0,0,0,0,0, 0,0,0,0,2,
-		2,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		2,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
+		2,0,0,0,0, 1,0,0,0,1, 0,0,0,0,2, 0,0,0,0,2,
+		2,0,0,0,0, 1,0,0,0,1, 2,2,2,2,2, 0,0,0,0,2,
 		1,0,0,0,0, 1,0,2,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,2,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,1,0, 0,0,0,0,1, 3,3,3,3,0, 3,0,0,0,2,
-		1,0,0,0,0, 0,0,0,0,1, 0,0,0,3,0, 3,0,0,0,1,
-		2,0,0,0,0, 1,0,0,0,1, 0,0,0,3,0, 3,0,0,0,1,
-		2,0,0,0,0, 1,0,0,0,0, 0,0,0,0,3, 3,0,0,0,1,
-		1,0,0,0,0, 1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,0,0, 1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,2,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		2,0,0,0,0, 1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,2,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		1,1,2,1,1, 1,1,1,1,1, 2,2,2,1,1, 2,2,1,2,1};
+		3,3,0,0,0, 1,0,0,0,1, 0,0,1,0,0, 0,0,0,2,2,
+		0,0,0,2,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0,
+		0,0,0,1,0, 0,0,0,0,1, 3,3,3,3,0, 3,0,0,0,0,
+		0,0,0,0,0, 0,0,0,0,1, 0,0,0,3,0, 3,0,0,0,0,
+		3,3,0,0,0, 0,0,0,0,1, 0,0,0,3,0, 3,0,0,2,2,
+		2,0,0,0,0, 0,0,0,0,0, 0,0,0,0,3, 3,0,0,0,1,
+		1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
+		1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
+		1,0,0,2,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
+		2,0,0,0,0, 1,0,0,0,1, 1,0,0,0,0, 0,0,0,0,2,
+		1,0,0,0,0, 1,0,0,0,1, 1,1,0,1,1, 1,0,0,0,2,
+		1,0,0,0,0, 1,0,0,0,1, 0,1,0,0,0, 1,0,0,0,2,
+		1,0,0,2,0, 0,0,0,0,0, 0,1,0,0,0, 1,0,0,0,2,
+		1,1,1,1,1, 1,1,1,1,1, 2,2,2,1,1, 2,2,1,2,1};
 
 Goal goal = {0, 0, 1};
 
@@ -60,7 +60,12 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* w
 
 	bool facing_down = sin(angle) > 0;
 	bool facing_right = cos(angle) > 0;
-
+	inline int mod(int x, int amount){
+		return ((x % amount) + amount) % amount;
+	}
+	inline float mod_float(float x, int amount){
+		return fmod(fmod(x, amount) + amount,amount);
+	}
 
 	if(x_wall){
 		float float_py = py;
@@ -74,7 +79,11 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* w
 			float_py += slope*(px - last_px);
 			distance += sqrt( (1+slope*slope)*(px-last_px)*(px-last_px) );
 
+			px = mod(px - !facing_right, MAZE_WIDTH<<MAZE_BLOCK_BITS) + !facing_right;
+			float_py = mod_float(float_py,MAZE_HEIGHT<<MAZE_BLOCK_BITS);
+
 			if(px < 0 || (int)float_py < 0 || px>>MAZE_BLOCK_BITS > MAZE_WIDTH || (int)float_py>>MAZE_BLOCK_BITS > MAZE_HEIGHT) return 1000000;
+
 			int current_wall = maze[coords((((px)>>MAZE_BLOCK_BITS) - !facing_right),((int)float_py)>>MAZE_BLOCK_BITS,MAZE_WIDTH)];
 			if(current_wall != 0){
 				if(wall_type) *(wall_type) = current_wall;
@@ -93,7 +102,11 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* w
 			py = ((py+(facing_down ? MAZE_BLOCK_SIZE : -1))>>MAZE_BLOCK_BITS)<<MAZE_BLOCK_BITS;
 			float_px += (1/slope)*(py - last_py);
 			distance += sqrt( (1+(1/slope)*(1/slope))*(py-last_py)*(py-last_py) );
+
+			py = mod(py - !facing_down, MAZE_HEIGHT<<MAZE_BLOCK_BITS) + !facing_down;
+			float_px = mod_float(float_px,MAZE_WIDTH<<MAZE_BLOCK_BITS);
 			if(py < 0 || (int)float_px < 0 || py>>MAZE_BLOCK_BITS > MAZE_WIDTH || (int)float_px>>MAZE_BLOCK_BITS > MAZE_HEIGHT) return 1000000;
+
 			int current_wall = maze[coords(((int)(float_px)>>MAZE_BLOCK_BITS),(py>>MAZE_BLOCK_BITS)-!facing_down,MAZE_WIDTH)];
 			if(current_wall != 0){
 				if(wall_type) *(wall_type) = current_wall;
@@ -156,7 +169,7 @@ byte getMaze(int x, int y){
 }
 
 byte getMazeFromWorld(float px, float py){
-	return getMaze(round_float(px)>>5,round_float(py)>>5);
+	return getMaze(round_float(px)>>MAZE_BLOCK_BITS,round_float(py)>>MAZE_BLOCK_BITS);
 }
 
 u16 shuffleGoal(){
@@ -173,7 +186,9 @@ u16 shuffleGoal(){
 
 
 void tryGoal(float x, float y, float angle){
-	if(getMazeFromWorld(x + 32 * cos(angle),y + 32 * sin(angle)) == BLOCK_GOAL){
+	if(getMazeFromWorld(x + 32 * cos(angle),y + 32 * sin(angle)) == BLOCK_GOAL ||
+			getMazeFromWorld(x + 16 * cos(angle),y + 16 * sin(angle)) == BLOCK_GOAL ||
+			getMazeFromWorld(x + 8 * cos(angle),y + 8 * sin(angle)) == BLOCK_GOAL){
 		shuffleGoal();
 		printf("found one!\n");
 	}
