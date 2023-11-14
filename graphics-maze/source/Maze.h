@@ -26,6 +26,7 @@ typedef struct{
 	float x_vel;
 	float y_vel;
 	float torque;
+	int score;
 	byte health;
 } Player;
 
@@ -47,6 +48,6 @@ byte getMaze(int x, int y);
 
 byte getMazeFromWorld(float x, float y);
 
-void tryGoal(float x, float y, float angle);
+void tryGoal(float x, float y, float angle, Player* player);
 
 u16 shuffleGoal();

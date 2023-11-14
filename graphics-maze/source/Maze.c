@@ -21,11 +21,11 @@ maze[] = {1,1,1,1,1, 1,1,1,1,1, 2,2,2,2,2, 2,2,2,2,2,
 		1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
 		1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
 		1,0,0,2,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
-		2,0,0,0,0, 1,0,0,0,1, 1,0,0,0,0, 0,0,0,0,2,
+		2,0,0,0,0, 1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2,
 		1,0,0,0,0, 1,0,0,0,1, 1,1,0,1,1, 1,0,0,0,2,
-		1,0,0,0,0, 1,0,0,0,1, 0,1,0,0,0, 1,0,0,0,2,
+		1,0,0,0,0, 1,0,0,0,0, 0,1,0,0,0, 1,0,0,0,2,
 		1,0,0,2,0, 0,0,0,0,0, 0,1,0,0,0, 1,0,0,0,2,
-		1,1,1,1,1, 1,1,1,1,1, 2,2,2,1,1, 2,2,1,2,1};
+		1,1,1,1,1, 1,1,1,1,1, 2,2,2,2,2, 2,2,1,2,1};
 
 Goal goal = {0, 0, 1};
 
@@ -185,12 +185,13 @@ u16 shuffleGoal(){
 }
 
 
-void tryGoal(float x, float y, float angle){
+void tryGoal(float x, float y, float angle, Player* player){
 	if(getMazeFromWorld(x + 32 * cos(angle),y + 32 * sin(angle)) == BLOCK_GOAL ||
 			getMazeFromWorld(x + 16 * cos(angle),y + 16 * sin(angle)) == BLOCK_GOAL ||
 			getMazeFromWorld(x + 8 * cos(angle),y + 8 * sin(angle)) == BLOCK_GOAL){
 		shuffleGoal();
-		printf("found one!\n");
+
+		printf("found one!, score %d\n",++player->score);
 	}
 }
 
