@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <nds.h>
 #include "P_Graphics.h"
-
+#include "P_Graphics_Plus.h"
+#include "Constants.h"
+#include <stdlib.h>
+#include <math.h>
 //         north (-y)
 //	(0,0) (1,0) (2,0)
 //  (0,1) (1,1) (2,1)   east(+x)
@@ -26,6 +29,12 @@ typedef struct{
 	byte health;
 } Player;
 
+typedef struct{
+	int x;
+	int y;
+	int old_block;
+} Goal;
+
 void Maze_Init();
 
 float Maze_get_raycast_distance(int x, int y, float angle, bool x_wall, int* wall_type);
@@ -37,3 +46,7 @@ void Render_map(enum BUFFER_TYPE bT, Camera player);
 byte getMaze(int x, int y);
 
 byte getMazeFromWorld(float x, float y);
+
+void tryGoal(float x, float y, float angle);
+
+u16 shuffleGoal();

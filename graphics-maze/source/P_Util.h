@@ -16,3 +16,7 @@ inline int coords(int x, int y, int w);
 inline int sign(int x);
 
 inline int round_float(float b);
+
+int rng();
+
+void set_seed(int new_seed);

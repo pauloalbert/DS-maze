@@ -27,3 +27,16 @@ inline int sign(int x){
 inline int round_float(float b){
 	return (int)(b+0.5);
 }
+
+int seed = 123456789;
+#define RNG_A 1103515245
+#define RNG_C 12345
+#define RNG_M (2<<31)
+int rng(){
+	seed = (RNG_A * seed + RNG_C) % RNG_M;
+	return seed < 0 ? -seed : seed;
+}
+
+void set_seed(int new_seed){
+	seed = new_seed;
+}

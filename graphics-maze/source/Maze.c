@@ -5,20 +5,16 @@
  *      Author: nds
  */
 #include "Maze.h"
-#include "P_Graphics.h"
-#include "P_Graphics_Plus.h"
-#include "Constants.h"
-#include <math.h>
 maze[] = {1,1,1,1,1, 1,1,1,1,1, 2,2,2,2,2, 2,2,2,2,2,
-		1,0,0,0,0, 0,0,0,0,1, 0,0,0,0,1, 0,0,0,0,2,
+		1,0,0,0,0, 0,0,1,0,0, 0,0,0,0,1, 0,0,0,0,2,
 		1,0,0,1,0, 0,0,0,0,1, 0,0,0,0,1, 0,0,0,0,2,
-		1,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
+		1,0,0,0,0, 0,0,1,1,1, 0,0,0,0,0, 0,0,0,0,2,
 		2,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
 		2,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
+		1,0,0,0,0, 1,0,2,0,1, 0,0,0,0,0, 0,0,0,0,2,
 		1,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
 		1,0,0,2,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
-		1,0,0,1,0, 0,0,0,0,1, 0,0,0,0,3, 3,0,0,0,2,
+		1,0,0,1,0, 0,0,0,0,1, 3,3,3,3,0, 3,0,0,0,2,
 		1,0,0,0,0, 0,0,0,0,1, 0,0,0,3,0, 3,0,0,0,1,
 		2,0,0,0,0, 1,0,0,0,1, 0,0,0,3,0, 3,0,0,0,1,
 		2,0,0,0,0, 1,0,0,0,0, 0,0,0,0,3, 3,0,0,0,1,
@@ -30,6 +26,9 @@ maze[] = {1,1,1,1,1, 1,1,1,1,1, 2,2,2,2,2, 2,2,2,2,2,
 		1,0,0,0,0, 1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
 		1,0,0,2,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,2,
 		1,1,2,1,1, 1,1,1,1,1, 2,2,2,1,1, 2,2,1,2,1};
+
+Goal goal = {0, 0, 1};
+
 u16 color_from_wall(int wall_type, bool is_x_wall){
 #ifdef FB0
 	switch(wall_type){
@@ -51,6 +50,9 @@ u16 color_from_wall(int wall_type, bool is_x_wall){
 void Maze_Init(){
 	MAZE_FOV = MAZE_FOV_MIN;
 	PULLBACK = PULLBACK_MIN;
+
+	shuffleGoal();
+
 }
 
 float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* wall_type){
@@ -156,3 +158,24 @@ byte getMaze(int x, int y){
 byte getMazeFromWorld(float px, float py){
 	return getMaze(round_float(px)>>5,round_float(py)>>5);
 }
+
+u16 shuffleGoal(){
+	maze[coords(goal.x,goal.y,MAZE_WIDTH)] = goal.old_block;
+	u16 old = (goal.y<<8) + goal.x;
+	goal.x = rng() % MAZE_WIDTH;
+	goal.y = rng() % MAZE_HEIGHT;
+	goal.old_block = getMaze(goal.x,goal.y);
+
+	maze[coords(goal.x,goal.y,MAZE_WIDTH)] = BLOCK_GOAL;
+
+	return old;
+}
+
+
+void tryGoal(float x, float y, float angle){
+	if(getMazeFromWorld(x + 32 * cos(angle),y + 32 * sin(angle)) == BLOCK_GOAL){
+		shuffleGoal();
+		printf("found one!\n");
+	}
+}
+

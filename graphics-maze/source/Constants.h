@@ -30,3 +30,7 @@ extern int maze[];
 
 #define SPEED_FORWARD 3.5
 #define SPEED_STRAFE 2.2
+
+
+/* BLOCKS */
+#define BLOCK_GOAL 5

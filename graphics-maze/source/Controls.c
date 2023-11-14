@@ -17,9 +17,27 @@ void initInput(){
 	printf("init keys: %d\n", startHeldKeys);
 }
 
+void _handleInput(Camera* camera, Player* player, u16 keys, u16 keys_pressed){
+	if(keys_pressed & KEY_START){
+		int seed = (int)((player->x*100)+(player->y*100000));
+		set_seed(seed);
+		printf("RESET: new seed - %d\n",seed);
+		u16 old = shuffleGoal();
+
+		printf("The goal was in: %d, %d\n",old&0xf, old >> 8);
+		player->x = 60;
+		player->y = 140;
+	}
+
+	//
+	if(keys_pressed & KEY_A)
+		tryGoal(player->x,player->y,player->angle);
+}
+
 void handleInput(Camera* camera, Player* player){
 	scanKeys();
 	u16 keys = keysHeld();
+	u16 keys_pressed = keysDown();
 	if(startHeldKeys != -1 && keys == startHeldKeys)
 		return;
 	startHeldKeys = -1;
@@ -75,16 +93,17 @@ void handleInput(Camera* camera, Player* player){
 	if(y_vec == 0)
 		player->y_vel /= 1.5;
 
-	if(keys & KEY_A)
+	if(keys & KEY_X)
 		MAZE_FOV = (MAZE_FOV + MAZE_FOV_MAX) / 2;
 	else
 		MAZE_FOV = MAZE_FOV_MIN;
 
-	if(keys & KEY_B)
+	if(keys & KEY_Y)
 			PULLBACK = (2* PULLBACK + PULLBACK_MAX) / 3;
 		else
 			PULLBACK = (PULLBACK + 2* PULLBACK_MIN) / 3;
 
+	_handleInput(camera, player, keys, keys_pressed);
 	//set camera based on player:
 	camera->angle = player->angle;
 	camera->x = round_float(player->x-PULLBACK*cos(player->angle));
