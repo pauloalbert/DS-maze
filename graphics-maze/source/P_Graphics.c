@@ -152,10 +152,10 @@ void FillRectangle(enum BUFFER_TYPE bT, int top, int bottom, int left, int right
 		i = left;
 		//if i'm on an odd pixel, draw only the second one of the pair.
 		if(i%2 == 1)
-			P_Buffer[coords(i++,j,P_BufferW)/2] = (color<<8);
+			P_Buffer[coords(i++,j,P_BufferW)/2] |= (color<<8);
 
 		for(; i < right; i+=2){
-			P_Buffer[coords(i,j,P_BufferW)/2] = color+(color<<8);
+			P_Buffer[coords(i,j,P_BufferW)/2] |= color+(color<<8);
 		}
 		if(i == right)
 			P_Buffer[coords(i,j,P_BufferW)/2] = color;
