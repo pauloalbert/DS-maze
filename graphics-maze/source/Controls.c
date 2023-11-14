@@ -93,7 +93,7 @@ void handleInput(Camera* camera, Player* player){
 	if(y_vec == 0)
 		player->y_vel /= 1.5;
 
-	if(keys & KEY_X)
+	if(keys & KEY_B)
 		MAZE_FOV = (MAZE_FOV + MAZE_FOV_MAX) / 2;
 	else
 		MAZE_FOV = MAZE_FOV_MIN;
@@ -106,6 +106,8 @@ void handleInput(Camera* camera, Player* player){
 	_handleInput(camera, player, keys, keys_pressed);
 	//set camera based on player:
 	camera->angle = player->angle;
+	if(keys & KEY_X)
+		camera->angle += 3.141592;
 	camera->x = round_float(player->x-PULLBACK*cos(player->angle));
 	camera->y = round_float(player->y-PULLBACK*sin(player->angle));
 
