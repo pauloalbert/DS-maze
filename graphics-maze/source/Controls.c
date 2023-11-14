@@ -93,6 +93,9 @@ void handleInput(Camera* camera, Player* player){
 
 	player->x_vel += x_vec/4;
 	player->y_vel += y_vec/4;
+
+	player->x_vel = clamp_float(player->x_vel, -SPEED_MAX, SPEED_MAX);
+	player->y_vel = clamp_float(player->y_vel, -SPEED_MAX, SPEED_MAX);
 	if(x_vec == 0)
 		player->x_vel /= 1.5;
 
