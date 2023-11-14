@@ -14,6 +14,8 @@ float MAZE_FOV;
 #define PULLBACK_MAX 64
 float PULLBACK;
 
+#define RAYCAST_RECURSION 20
+
 /* MAZE */
 #define MAZE_BLOCK_BITS 5
 #define MAZE_BLOCK_SIZE 32//(2<<MAZE_BLOCK_BITS);

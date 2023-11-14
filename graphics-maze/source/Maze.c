@@ -66,7 +66,7 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* w
 		int i = 0;
 		float distance = 0;
 
-		for(i = 0; i < 10; i++){
+		for(i = 0; i < RAYCAST_RECURSION; i++){
 			int last_px = px;
 			px = (((px+(facing_right ? MAZE_BLOCK_SIZE : -1))>>MAZE_BLOCK_BITS))<<MAZE_BLOCK_BITS;
 			float_py += slope*(px - last_px);
@@ -86,7 +86,7 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* w
 		//set a limit
 		int i = 0;
 		float distance = 0;
-		for(i = 0; i < 10; i++){
+		for(i = 0; i < RAYCAST_RECURSION; i++){
 			int last_py = py;
 			py = ((py+(facing_down ? MAZE_BLOCK_SIZE : -1))>>MAZE_BLOCK_BITS)<<MAZE_BLOCK_BITS;
 			float_px += (1/slope)*(py - last_py);
