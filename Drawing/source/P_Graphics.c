@@ -96,7 +96,7 @@ void DrawPixel(u16* buffer, int width, int px, int py, u16 color){
 	buffer[coords(px,py,width)] = color;
 #endif
 #ifdef ROTOSCALE
-	buffer[coords(px,py,width)/2] &= 0xff << (8*(px%2 == 1));
+	buffer[coords(px,py,width)/2] &= 0xff << (8*(px%2 == 0));
 	buffer[coords(px,py,width)/2] ^= color << (8*(px%2 == 1));
 #endif
 }

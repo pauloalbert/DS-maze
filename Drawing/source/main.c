@@ -28,9 +28,7 @@ int main(void) {
 		scanKeys();
 		u16 keys = keysHeld();
 		int i;
-			for(i=50; i < 200; i++){
-				DrawPixel(get_buffer_pointer(MAIN),256,i,30,1);
-			}
+		DrawLine(MAIN,30,30,100,150,1);
 		if(keys & KEY_TOUCH){
 			touchPosition touch;
 			touchRead(&touch);
