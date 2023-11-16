@@ -18,28 +18,38 @@ int main(void) {
 	last_touch.px = 999;
 	//The main infinite loop
 
+	int width = 4;
 	while(1) {
 
-		swap_buffers(MAIN);
 		/*************
 		 * Exercise 1
 		 *************/
 		//Scan the keys
 		scanKeys();
 		u16 keys = keysHeld();
-		int i;
-		DrawLine(MAIN,30,30,100,150,1);
+
+		if(keys & KEY_R)
+			width = 9;
+		else
+			width = 3;
+
 		if(keys & KEY_TOUCH){
 			touchPosition touch;
 			touchRead(&touch);
+
+			int i;
+			int j;
 			if(last_touch.px == 999){
-				FillRectangle(MAIN,touch.py,touch.py,touch.px,touch.px,1);
+				for(i = -(width-1)/2; i <= width/2; i++)
+					for(j = -(width-1)/2; j <= width/2; j++)
+							FillRectangle(MAIN,touch.py +j,touch.py+j,touch.px+i,touch.px+i, !(keys & KEY_L));
 				printf("NEW\n");
 			}
 			else{
 
-				//printf("LINE (%d,%d:%d,%d)\n",last_touch.px,last_touch.py,touch.px,touch.py);
-				DrawLine(MAIN,last_touch.px,last_touch.py,touch.px,touch.py,1);
+				for(i = -(width-1)/2; i <= width/2; i++)
+					for(j = -(width-1)/2; j <= width/2; j++)
+						DrawLine(MAIN,last_touch.px+i,last_touch.py+j,touch.px+i,touch.py+j, !(keys & KEY_L));
 			}
 			last_touch.px = touch.px;
 			last_touch.py = touch.py;
@@ -48,6 +58,7 @@ int main(void) {
 			last_touch.px = 999;
 		}
 
+		//swap_buffers(MAIN);
 		swiWaitForVBlank();
 
 	}
