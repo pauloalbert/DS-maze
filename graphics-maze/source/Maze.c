@@ -190,7 +190,7 @@ void tryGoal(float x, float y, float angle, Player* player){
 			getMazeFromWorld(x + 16 * cos(angle),y + 16 * sin(angle)) == BLOCK_GOAL ||
 			getMazeFromWorld(x + 8 * cos(angle),y + 8 * sin(angle)) == BLOCK_GOAL){
 		shuffleGoal();
-
+		Audio_PlaySoundEX( SFX_SWISH , 255, 128);
 		printf("found one!, score %d\n",++player->score);
 	}
 }

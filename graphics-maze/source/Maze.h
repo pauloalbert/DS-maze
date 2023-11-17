@@ -6,6 +6,7 @@
 #include "Constants.h"
 #include <stdlib.h>
 #include <math.h>
+#include "P_Audio.h"
 //         north (-y)
 //	(0,0) (1,0) (2,0)
 //  (0,1) (1,1) (2,1)   east(+x)
