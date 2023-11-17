@@ -28,8 +28,6 @@ maze[] = {1,1,1,1,1, 1,1,1,1,1, 2,2,2,2,2, 2,2,2,2,2,
 		1,1,1,1,1, 1,1,1,1,1, 2,2,2,2,2, 2,2,1,2,1};
 
 Goal goal = {0, 0, 1};
-Block last_wall = {0,0,0};
-bool last_wall_was_x;
 
 u16 color_from_wall(int wall_type, bool is_x_wall){
 #ifdef FB0
@@ -57,7 +55,7 @@ void Maze_Init(){
 
 }
 
-float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, Block* wall_type){
+float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, int* wall_type){
 	float slope = tan(angle);
 
 	bool facing_down = sin(angle) > 0;
@@ -88,12 +86,7 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, Block*
 
 			int current_wall = maze[coords((((px)>>MAZE_BLOCK_BITS) - !facing_right),((int)float_py)>>MAZE_BLOCK_BITS,MAZE_WIDTH)];
 			if(current_wall != 0){
-				if(wall_type){
-					wall_type->block = current_wall;
-					wall_type->x = (((px)>>MAZE_BLOCK_BITS) - !facing_right);
-					wall_type->y = ((int)float_py)>>MAZE_BLOCK_BITS,MAZE_WIDTH;
-				}
-
+				if(wall_type) *(wall_type) = current_wall;
 				return distance;
 			}
 		}
@@ -116,11 +109,7 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, Block*
 
 			int current_wall = maze[coords(((int)(float_px)>>MAZE_BLOCK_BITS),(py>>MAZE_BLOCK_BITS)-!facing_down,MAZE_WIDTH)];
 			if(current_wall != 0){
-				if(wall_type){
-					wall_type->block = current_wall;
-					wall_type->x = ((int)(float_px)>>MAZE_BLOCK_BITS);
-					wall_type->y = (py>>MAZE_BLOCK_BITS)-!facing_down,MAZE_WIDTH;
-				}
+				if(wall_type) *(wall_type) = current_wall;
 				return distance;
 			}
 		}
@@ -133,23 +122,19 @@ float Maze_get_raycast_distance(int px, int py, float angle, bool x_wall, Block*
 void Render_screen(enum BUFFER_TYPE bT, Camera player, int columns){
 	//FillRectangle(MAIN, 0,85,0,255, RGB15(20,25,31));
 	//FillRectangle(MAIN, 86,191,0,255, RGB15(20,31,20));
-	last_wall.x = -1;
 	int i = 0;
 	for(i = 0; i < columns; i++){
 		float angle = player.angle + MAZE_FOV*(-0.5 + (i+1)/(float)(columns+1));
 
-		Block x_wall = {0,0,0};
-		Block y_wall = {0,0,0};
-		float x_wall_distance = Maze_get_raycast_distance(player.x, player.y, angle, true, &x_wall);
-		float y_wall_distance = Maze_get_raycast_distance(player.x, player.y, angle, false, &y_wall);
+		int x_wall_type = 0;
+		int y_wall_type = 0;
+		float x_wall_distance = Maze_get_raycast_distance(player.x, player.y, angle, true, &x_wall_type);
+		float y_wall_distance = Maze_get_raycast_distance(player.x, player.y, angle, false, &y_wall_type);
 
 		float distance = x_wall_distance < y_wall_distance ? x_wall_distance : y_wall_distance;
-		Block* wall = x_wall_distance < y_wall_distance ? &x_wall : &y_wall;
+
 		//int color_falloff = ((int)distance / 30) & 0x1f;
-		u16 wall_color = color_from_wall( wall->block, x_wall_distance > y_wall_distance);
-		if(last_wall.x != -1 && ( (x_wall_distance > y_wall_distance) != last_wall_was_x)){
-			wall_color = 13;
-		}
+		u16 wall_color = color_from_wall(x_wall_distance < y_wall_distance ? x_wall_type : y_wall_type, x_wall_distance > y_wall_distance);
 		//wall_color = RGB15((wall_color & 0x1f ) /(color_falloff+1),((wall_color & 0x1f<<5 )>>5/(color_falloff+1)), (((wall_color>>10)&0x1f)/(color_falloff+1)));
 		float half_length_wall = 150/(1+(distance*cos(MAZE_FOV*(-0.5+i/(float)columns)))/MAZE_BLOCK_SIZE);
 		//FillRectangle(MAIN, 0, clamp(96-(int)half_length_wall,0,192), (int)(i*(256/(float)columns)),(int)((i+1)*(256/(float)columns))-1, 1);
@@ -157,11 +142,6 @@ void Render_screen(enum BUFFER_TYPE bT, Camera player, int columns){
 		FillRectangle(bT, clamp(96-(int)half_length_wall,0,192), clamp(96+(int)half_length_wall,0,192), (int)(i*(256/(float)columns)),(int)((i+1)*(256/(float)columns))-1, wall_color);
 		//DrawAngledLine(bT,player.x,player.y,angle,x_wall_distance,RGB15(31,0,0));
 		//DrawAngledLine(bT,player.x,player.y,angle+0.05,y_wall_distance,RGB15(0,0,31));
-
-		last_wall.x = wall->x;
-		last_wall.y = wall->y;
-		last_wall.block = wall->block;
-		last_wall_was_x = x_wall_distance > y_wall_distance;
 	}
 }
 
