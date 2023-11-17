@@ -37,9 +37,14 @@ typedef struct{
 	int old_block;
 } Goal;
 
+typedef struct{
+	int x;
+	int y;
+	int block;
+} Block;
 void Maze_Init();
 
-float Maze_get_raycast_distance(int x, int y, float angle, bool x_wall, int* wall_type);
+float Maze_get_raycast_distance(int x, int y, float angle, bool x_wall, Block* wall_type);
 
 void Render_screen(enum BUFFER_TYPE bT, Camera player, int columns);
 
