@@ -1,4 +1,3 @@
-
 #include <math.h>
 #include <nds.h>
 #include "P_Graphics.h"
@@ -22,23 +21,9 @@ int main(void)
 	u8 j = 0;
 	while(1) {
 		swap_buffers(MAIN);
-		Render_screen(MAIN,camera,32);
-		if(++i % (20-j) == 0){
-			float dx = (goal.x<<MAZE_BLOCK_BITS) - player.x;
-			float dy = (goal.y<<MAZE_BLOCK_BITS) - player.y;
-
-			float angle = atan2(dy,dx) - player.angle;
-			float distance = (dx*dx + dy*dy);
-
-			u8 volume = (u8)clamp(255-(distance/1000),20,255);
-			j = volume>>4;
-			if(cos(angle) < 0.5) volume >> 1;
-			if(cos(angle) < 0) volume >> 1;
-			Audio_PlaySoundEX( SFX_LASER , volume, (u8)(125 * sin(angle) + 128));
-
-			i = 0;
-		}
 		handleInput(&camera, &player);
+		Render_screen(MAIN,camera,32);
+		Give_Hint(&player,&goal);
 		swiWaitForVBlank();
 	}
 }
