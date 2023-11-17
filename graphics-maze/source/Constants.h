@@ -31,7 +31,7 @@ extern int maze[];
 #define SPEED_FORWARD 3.5
 #define SPEED_STRAFE 2.2
 
-#define SPEED_MAX 7
+#define SPEED_MAX 99
 
 
 /* BLOCKS */
